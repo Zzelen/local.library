@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\Entity;
 
-
+use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Book
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,7 +18,7 @@ class Book
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -32,67 +30,64 @@ class Book
     /**
      * @ORM\Column(type="boolean", options={"default":false})
      */
-    private $hidden;
+    private $hidden = false;
 
     /**
-     * @return mixed
+     * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="Books")
+     * @ORM\JoinColumn(nullable=false)
      */
-    public function getId()
+    private $author;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     * @return Book
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDate()
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    /**
-     * @param mixed $date
-     * @return Book
-     */
-    public function setDate($date)
+    public function setDate(?string $date): self
     {
         $this->date = $date;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHidden()
+    public function getHidden(): ?bool
     {
         return $this->hidden;
     }
 
-    /**
-     * @param mixed $hidden
-     * @return Book
-     */
-    public function setHidden($hidden)
+    public function setHidden(bool $hidden): self
     {
         $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): self
+    {
+        $this->author = $author;
+
         return $this;
     }
 }
