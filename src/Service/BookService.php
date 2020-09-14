@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\DependencyInjection\Container;
 
 class BookService
@@ -26,8 +27,16 @@ class BookService
         return $this->em->getRepository('App:Book')->findAll();
     }
 
-    public function createBook($params, Author $author)
+    public function createBook($params, Author $author, $newBook = true)
     {
+        if ($newBook) {
+            $book = new Book();
+        } else {
+            $book = $this->em->getRepository('App:Book')->find($params['id']);
+            if (!$book) {
+                throw new EntityNotFoundException('Книга не найдена', $params['id']);
+            }
+        }
 
         if (empty(trim($params['name']))) {
             return [
@@ -36,7 +45,7 @@ class BookService
             ];
         }
 
-        $book = new Book();
+
         $book
             ->setName($params['name'])
             ->setDate($params['date'])
@@ -46,7 +55,9 @@ class BookService
         $this->em->flush();
 
 
-        return $book;
+        return [
+            'success' => true
+        ];
     }
 
     public function deleteBook(Book $book)

@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Добавить книгу {% endblock %}
+{% block title %} Изменить книгу {% endblock %}
 {% block body %}
     {# <div> #}
     {# {{ message }} #}
     {# </div> #}
 
     <div class="body">
-        <form id="createBookForm">
-            <p><b>Новая книга</b></p>
+        <form id="editBookForm">
+            <p><b>Изменение книги</b></p>
             <div>
                 <label>Название книги: </label>
                 <input type="text" name="name" placeholder="Название" value="{{ book.name|default('') }}">
@@ -36,15 +36,13 @@
         let $saveBookButton = $("#saveButton");
 
         $saveBookButton.on('click', function () {
-            let $data = $("#createBookForm").serialize();
-            $.post('{{ path('app_book_createbook', {'id': author.id}) }}', $data, function (response) {
+            let $data = $("#editBookForm").serialize();
+            $.post('{{ path('app_book_editbook', {'author': author.id, 'book': book.id }) }}', $data, function (response) {
                 if (response.success === false) {
                     alert(response.message);
                 } else if (response.success === true) {
                     window.location.href = "{{ path('app_author_authorpage', {'id' : author.id}) }}";
                 }
-
-                {# window.location.href = "{{ path('app_author_authorpage', {'id' : author.id}) }}"; #}
             }, 'json');
         });
 

@@ -87,7 +87,7 @@ class AuthorController extends AbstractController
         if ($request->getMethod() === 'POST' && $request->get('submit')) {
             $params = $request->request->all();
             $params['id'] = $author->getId();
-            $author = $this->authorService->editAuthor($params, $author);
+            $author = $this->authorService->editAuthor($params,false);
             if ($author) {
                 return $this->redirectToRoute('app_author_authorpage', ['id' => $author->getId()]);
             }

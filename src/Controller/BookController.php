@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Service\BookService;
+use Doctrine\ORM\EntityNotFoundException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +38,7 @@ class BookController extends AbstractController
 
     /**
      * @Template ()
-     * @Route ("/book/{id}/create")
+     * @Route ("/author/{id}/book/create")
      * @param Request $request
      * @param Author $author
      * @return array|JsonResponse|RedirectResponse
@@ -46,7 +47,7 @@ class BookController extends AbstractController
     {
         if ($request->getMethod() === 'POST') {
             $result = $this->bookService->createBook($request->request->all(), $author);
-            return new JsonResponse($result, '200');
+            return new JsonResponse($result);
         }
 
         return [
@@ -70,6 +71,33 @@ class BookController extends AbstractController
         }
 
         return $this->redirectToRoute('app_author_authorpage', ['id' => $book->getAuthor()->getId()]);
+    }
+
+
+    /**
+     * @Template ()
+     * @Route ("/author/{author}/book/{book}/edit")
+     * @param Request $request
+     * @param Author $author
+     * @param Book $book
+     * @return Author[]|JsonResponse
+     * @throws EntityNotFoundException
+     */
+    public function editBookAction(Request $request, Author $author, Book $book)
+    {
+
+        if ($request->getMethod() === 'POST') {
+            $params = $request->request->all();
+            $params['id'] = $book->getId();
+
+            $result = $this->bookService->createBook($params, $author, false );
+            return new JsonResponse($result);
+        }
+        return [
+            'author' => $author,
+            'book' => $book
+        ];
+
     }
 
 }
