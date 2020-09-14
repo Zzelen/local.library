@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Добавить книгу {% endblock %}
+{% block body %}
+{#    <div>#}
+{#        {{ message }}#}
+{#    </div>#}
+
+    <form id="createBookForm">
+        <p><b>Новая книга</b></p>
+        <div>
+            <label>Название книги: </label>
+            <input type="text" name="name" placeholder="Название" value="{{ book.name|default('')}}" >
+        </div>
+        <div>
+            <label>Дата написания: </label>
+            <input type="number" name="date" placeholder="Дата" value="{{ book.date|default('')}}">
+        </div>
+        <div>
+            <input id="saveButton" type="button" name="saveButton" value="Сохранить">
+        </div>
+    </form>
+    <div>
+        <a href="{{ path('app_author_authorpage', {'id' : author.id}) }}"><button>Отменить</button> </a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script class="javascript">
+
+        let $saveBookButton = $("#saveButton");
+
+        $saveBookButton.on('click', function() {
+            let $data = $("#createBookForm").serialize();
+            console.log($data);
+            $.post('{{ path('app_book_createbook', {'id': author.id}) }}', $data, function (response) {
+                console.log(response);
+                alert(response.message);
+                {#window.location.href = "{{ path('app_author_authorpage', {'id' : author.id}) }}";#}
+            }, 'json');
+        });
+
+    </script>
+
+{% endblock %}

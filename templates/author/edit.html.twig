@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}  Изменить автора — {{ author.surname }}{% endblock %}
+{% block body %}
+{#    <div>#}
+{#        {{ message }}#}
+{#    </div>#}
+
+    <form class="authorForm" action="" method="POST">
+        <p class="form-header form-group"><b>Новый автор</b></p>
+        <div class="form-group">
+            <label>Фамилия автора: </label>
+            <input type="text" class="form-control" name="surname" placeholder="Фамилия"
+                   value="{{ author.surname|default('') }}">
+        </div>
+        <div class="form-group">
+            <label>Имя автора: </label>
+            <input type="text" class="form-control" name="name" placeholder="Имя"
+                   value="{{ author.name|default('') }}">
+        </div>
+        <div class="form-group">
+            <label>Отчество автора: </label>
+            <input type="text" class="form-control" name="middlename" placeholder="Отчество"
+                   value="{{ author.middlename|default('') }}">
+        </div>
+        <div class="form-group">
+            <label>Дата рождения: </label>
+            <input type="date" class="form-control" name="birthday" value="{{ author.birthday|date('Y-m-d')|default('') }}">
+        </div>
+        <div class="form-group">
+            <label>Дата смерти: </label>
+            <input type="date" class="form-control" name="deathday" value="{{ author.deathday|date("Y-m-d")|default('') }}">
+        </div>
+        <div class="form-group">
+            <label>Информация об авторе: </label>
+            <textarea class="form-control" name="content"
+                      placeholder="Информация">{{ author.content|default('') }}</textarea>
+        </div>
+        <div class="btn1 form-group">
+            <input class="btn btn-primary" type="submit" name="submit" value="Сохранить">
+        </div>
+        <div class="btn2 form-group">
+            <a href="http://local.library/authors">
+                <button type="button" class="btn btn-danger">Отменить</button>
+            </a>
+        </div>
+    </form>
+    <form class="formsadsa">
+        <input type="hidden" name="aaaa" value="14">
+    </form>
+    <div>
+        <button id="cancelButton" name="cancel" onclick="cancelButton()">Отменить</button>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script class="javascript">
+
+        {#$(document).ready(function(){#}
+        {#    // alert(jQuery.fn.jquery);#}
+        {#});#}
+
+        {#function cancelButton() {#}
+
+        {#    let params = $('.formsadsa').serialize();#}
+        {#    $.post('{{ path('app_main_index') }}', params, function (data) {#}
+
+        {#        console.log('tuk');#}
+        {#        console.log(data);#}
+        {#    },'json').fail(function (response){#}
+
+        {#    });#}
+        {#    // let cancelButton = $("#cancelButton");#}
+        {#    // console.log(cancelButton);#}
+        {#    //#}
+        {#    // let cancelButton2 = document.querySelector('#cancelButton');#}
+        {#    // console.log(cancelButton);#}
+        {#    // cancelButton.setAttribute("disabled", "disabled");#}
+        {#    // cancelButton2.setAttribute("disabled", "disabled");#}
+        {#    //#}
+        {#    // setTimeout(1000);#}
+        {#    //#}
+        {#    // cancelButton2.setAttribute("disabled", "enabled");#}
+        {#    // // alert('HI!');#}
+        {#    // let asr = 4*324;#}
+        {#    // console.log('hello 4ert! - ' + asr);#}
+        {#}#}
+
+    </script>
+
+{% endblock %}

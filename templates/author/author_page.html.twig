@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ author.surname }} {% endblock %}
+{% block body %}
+    <div class="content">
+        <div class="authorPage">
+            <div class="authorHeader font-weight-bold">
+                <div class="authorName">
+                    {{ author.surname }} {{ author.name }} {{ author.middlename }}
+                </div>
+                <div class="yearsOfLife">
+                    {{ author.birthday|date('d-m-Y') }} — {% if author.deathday == null %} живет {% endif %} {{ author.deathday|date('d-m-Y') }}
+
+                </div>
+            </div>
+            <div class="authorInfo">
+                <div class="content-title font-weight-bold">
+                    Информация об авторе:
+                </div>
+                <div class="content-info">
+                    {{ author.content }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="books tableContent">
+        <table class="table table-dark table-bordered">
+            <tr>
+                <th>№</th>
+                <th>Название книги</th>
+                <th>Год написания</th>
+                <th>Удаление</th>
+            </tr>
+            {% for book in author.books %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.date }}</td>
+                    <td><a href="{{ path('app_book_deletebook', {'id': book.id}) }}">Удалить</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <a href="{{ path('app_author_edit', {'id': author.id})  }}">
+                <button class="btn btn-primary">Изменить</button>
+            </a></div>
+        <div>
+            <a href="{{ path('app_author_delete', {'id': author.id}) }}"><button>Удалить автора</button></a>
+        </div>
+        <div class="btn3">
+            <form action="{{ path('app_book_createbook', {'id': author.id}) }}" method="GET">
+                <input type="hidden" name='author_id' value="{{ author.id }}">
+                <input class="btn btn-primary" type="submit" name="submit" value="Добавить книгу">
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
