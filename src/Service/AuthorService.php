@@ -20,7 +20,7 @@ class AuthorService
 
     public function getAuthors(): array
     {
-        return $this->em->getRepository('App:Author')->findAll();
+        return $this->em->getRepository('App:Author')->findBy([],['surname' => 'ASC']);
     }
 
     public function getAuthorById($id)

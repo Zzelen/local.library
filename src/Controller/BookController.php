@@ -100,4 +100,17 @@ class BookController extends AbstractController
 
     }
 
+    /**
+     * @Template ()
+     * @Route ("/books/all")
+     * @return array
+     */
+    public function allBooksAction(): array
+    {
+        $booksArray = $this->bookService->getABCBooks();
+        return [
+            'booksArray' => $booksArray
+        ];
+    }
+
 }

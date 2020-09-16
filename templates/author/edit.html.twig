@@ -43,18 +43,18 @@
                 <input class="btn btn-primary" type="submit" name="submit" value="Сохранить">
             </div>
             <div class="btn2 form-group">
-                <a href="http://local.library/authors">
+                <a href="{{ path('app_author_authorpage', {'id': author.id}) }}">
                     <button type="button" class="btn btn-danger">Отменить</button>
                 </a>
             </div>
         </form>
-        <form class="formsadsa">
-            <input type="hidden" name="aaaa" value="14">
-        </form>
-        <div>
-            <button id="cancelButton" name="cancel" onclick="cancelButton()">Отменить</button>
-        </div>
-    </div>
+{#        <form class="formsadsa">#}
+{#            <input type="hidden" name="aaaa" value="14">#}
+{#        </form>#}
+{#        <div>#}
+{#            <button id="cancelButton" name="cancel" onclick="cancelButton()">Отменить</button>#}
+{#        </div>#}
+{#    </div>#}
 
 
 {% endblock %}

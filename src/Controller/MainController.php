@@ -19,4 +19,27 @@ class MainController extends AbstractController
         return [];
     }
 
+
+    /**
+     * @Template ()
+     * @Route ("/news")
+     * @return array
+     */
+    public function newsAction()
+    {
+        return [];
+    }
+
+
+    /**
+     * @Template ()
+     * @Route ("/about")
+     * @return array
+     */
+    public function aboutAction()
+    {
+        return [];
+    }
+
+
 }

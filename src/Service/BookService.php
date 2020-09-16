@@ -24,7 +24,7 @@ class BookService
 
     public function getBooks(): array
     {
-        return $this->em->getRepository('App:Book')->findAll();
+        return $this->em->getRepository('App:Book')->findBy([],['name' => 'ASC']);
     }
 
     public function createBook($params, Author $author, $newBook = true)
@@ -67,6 +67,26 @@ class BookService
         return [
             'success' => true
         ];
+    }
+
+    public function getABCBooks()
+    {
+        $books = $this->getBooks();
+        $booksArray = [];
+        /** @var Book $book */
+        foreach ($books as $book) {
+            $name = $book->getName();
+            preg_match('/^[\\S]{1}/iu', $name, $match);
+            if (preg_match('/^[0-9]{1}/iu', $match[0], $match1)) {
+                $booksArray['1-9'][] = $book;
+            } elseif (preg_match('/^[A-Za-zА-Яа-яЁё]{1}/iu', $match[0], $match2)) {
+                $booksArray[mb_strtoupper($match[0])][] = $book;
+            } else {
+                $booksArray['#'][] = $book;
+            }
+        }
+
+        return $booksArray;
     }
 
 }
