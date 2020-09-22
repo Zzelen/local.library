@@ -42,6 +42,7 @@ class BookController extends AbstractController
      * @param Request $request
      * @param Author $author
      * @return array|JsonResponse|RedirectResponse
+     * @throws EntityNotFoundException
      */
     public function createBookAction(Request $request, Author $author)
     {

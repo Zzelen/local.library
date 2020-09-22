@@ -13,11 +13,17 @@ security:
 
     role_hierarchy:
         ROLE_USER:
+        ROLE_ADMIN: [ROLE_READER, ROLE_USER]
+        ROLE_READER: [ROLE_USER]
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
             anonymous: lazy
             provider: app_user_provider
             guard:
@@ -25,8 +31,8 @@ security:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+#                 where to redirect after logout
+#                target: /books
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -37,5 +43,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/books, roles: ROLE_ADMIN }
+#         - { path: ^/books, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

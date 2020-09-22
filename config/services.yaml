@@ -34,3 +34,6 @@ services:
 
     App\Service\AuthorService:
         arguments: ['@service_container']
+
+    App\Controller\SecurityController:
+        arguments: ['@service_container']

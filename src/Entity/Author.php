@@ -162,23 +162,23 @@ class Author
         return $this->books;
     }
 
-    public function addY(Book $y): self
+    public function addBook(Book $book): self
     {
-        if (!$this->books->contains($y)) {
-            $this->books[] = $y;
-            $y->setAuthor($this);
+        if (!$this->books->contains($book)) {
+            $this->books[] = $book;
+            $book->setAuthor($this);
         }
 
         return $this;
     }
 
-    public function removeY(Book $y): self
+    public function removeBook(Book $book): self
     {
-        if ($this->books->contains($y)) {
-            $this->books->removeElement($y);
+        if ($this->books->contains($book)) {
+            $this->books->removeElement($book);
             // set the owning side to null (unless already changed)
-            if ($y->getAuthor() === $this) {
-                $y->setAuthor(null);
+            if ($book->getAuthor() === $this) {
+                $book->setAuthor(null);
             }
         }
 
