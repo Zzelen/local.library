@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Service\Validation\ValidationLoginName;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
@@ -61,33 +64,47 @@ class SecurityController extends AbstractController
         $errorMsg = [];
 
         if ($request->getMethod() === 'POST') {
-            $params = $request->request->all();
 
-            if (empty($params['loginName'])) {
-                $errorMsg['loginName'] = 'Заполните поле Никнейм';
-            }
+            $params = [
+                'loginName' => trim($request->get('loginName')) ?? '',
+                'email' => trim($request->get('email')) ?? '',
+                'password' => trim($request->get('password')) ?? '',
+                'repeatedPassword' => trim($request->get('repeatedPassword')) ?? '',
+                'surname' => trim($request->get('surname')) ?? '',
+                'name' => trim($request->get('name')) ?? '',
+                'middlename' => trim($request->get('middlename')) ?? '',
+                'birthday' => $request->get('birthday') ?? '',
+                'phone' => trim($request->get('phone')) ?? ''
+            ];
 
-            if (empty($params['email'])) {
+            $errorMsg = $this->validate($params);
+
+
+            if (empty(trim($params['email']))) {
                 $errorMsg['email'] = 'Заполните поле электронная почта';
+            } elseif (!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
+                $errorMsg['email'] = 'Неправильно введен email';
             }
+
 
             if (empty($params['password'])) {
                 $errorMsg['password'] = 'Введите пароль';
             }
 
+
             if ($params['password'] !== $params['repeatedPassword']) {
-                $errorMsg['repeatedPassword'] = 'Неверно введен пароль';
+                $errorMsg['repeatedPassword'] = 'Пароли не совпадают';
             }
 
-            if (empty($params['surname'])) {
+            if (empty(trim($params['surname']))) {
                 $errorMsg['surname'] = 'Заполните поле Фамилия';
             }
 
-            if (empty($params['name'])) {
+            if (empty(trim($params['name']))) {
                 $errorMsg['name'] = 'Заполните поле Имя';
             }
 
-            if (empty($params['middlename'])) {
+            if (empty(trim($params['middlename']))) {
                 $errorMsg['middlename'] = 'Заполните поле Отчество';
             }
 
@@ -124,11 +141,39 @@ class SecurityController extends AbstractController
 
                 $success = true;
             }
+
             return new JsonResponse([
                 'errorMsg' => $errorMsg,
                 'success' => $success
             ]);
         }
         return [];
+    }
+
+    private function validate($params)
+    {
+        $result = [];
+        $validationLoginName = new ValidationLoginName($params['loginName']);
+        if ($validationLoginName->IsValid() === false) {
+            $result['loginName'] = $validationLoginName->getMessage();
+        }
+
+        if ($this->uniqueValidate($params['loginName'])) {
+            $result['loginName'] = 'Пользователь с таким Ником уже существует';
+        }
+
+
+        return $result;
+    }
+    protected function uniqueValidate($loginName)
+    {
+        /** @var UserRepository $userRep */
+        $userRep = $this->em->getRepository('App:User');
+        /** @var User $currentUser */
+        $currentUser = $userRep->findOneByLoginName($loginName);
+        if ($currentUser && ($currentUser->getLoginName() === $loginName)) {
+            return true;
+        }
+        return false;
     }
 }
