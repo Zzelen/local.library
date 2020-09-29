@@ -4,8 +4,6 @@
 namespace App\Service\Validation;
 
 
-use App\Repository\UserRepository;
-
 class ValidationLoginName extends AbstractValidation
 {
 

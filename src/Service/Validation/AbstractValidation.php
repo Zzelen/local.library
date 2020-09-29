@@ -17,7 +17,9 @@ abstract class AbstractValidation implements ValidateInterface
     public function __construct($param)
     {
         $this->param = $param;
+        $this->isValid = false;
         $this->validate();
+
 
     }
 

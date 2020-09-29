@@ -4,7 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\Validation\ValidationBirthday;
+use App\Service\Validation\ValidationEmail;
 use App\Service\Validation\ValidationLoginName;
+use App\Service\Validation\ValidationName;
+use App\Service\Validation\ValidationPassword;
+use App\Service\Validation\ValidationPhone;
+use App\Service\Validation\ValidationSurname;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
@@ -61,7 +67,6 @@ class SecurityController extends AbstractController
     public function registerAction(Request $request)
     {
         $success = false;
-        $errorMsg = [];
 
         if ($request->getMethod() === 'POST') {
 
@@ -77,67 +82,35 @@ class SecurityController extends AbstractController
                 'phone' => trim($request->get('phone')) ?? ''
             ];
 
-            $errorMsg = $this->validate($params);
+            $result = $this->validate($params);
+            $errorMsg = $result['result'];
 
-
-            if (empty(trim($params['email']))) {
-                $errorMsg['email'] = 'Заполните поле электронная почта';
-            } elseif (!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
-                $errorMsg['email'] = 'Неправильно введен email';
-            }
-
-
-            if (empty($params['password'])) {
-                $errorMsg['password'] = 'Введите пароль';
-            }
-
-
-            if ($params['password'] !== $params['repeatedPassword']) {
-                $errorMsg['repeatedPassword'] = 'Пароли не совпадают';
-            }
-
-            if (empty(trim($params['surname']))) {
-                $errorMsg['surname'] = 'Заполните поле Фамилия';
-            }
-
-            if (empty(trim($params['name']))) {
-                $errorMsg['name'] = 'Заполните поле Имя';
-            }
-
-            if (empty(trim($params['middlename']))) {
-                $errorMsg['middlename'] = 'Заполните поле Отчество';
-            }
-
-            if (empty($params['birthday'])) {
-                $errorMsg['birthday'] = 'Заполните поле Дата рождения';
-            }
-
-            if (empty($params['phone'])) {
-                $errorMsg['phone'] = 'Заполните поле Номер телефона';
-            }
 
             $params['birthday'] = new \DateTime($params['birthday']);
 
-            if (empty($errorMsg)) {
+            if ($result['status']) {
 
-//                $user = new User();
-//
-//                $user
-//                    ->setLoginName($params['loginName'])
-//                    ->setEmail($params['email'])
-//                    ->setPassword($this->passwordEncoder->encodePassword($user, $params['password']))
-//                    ->setSurname($params['surname'])
-//                    ->setName($params['name'])
-//                    ->setMiddlename($params['middlename'])
-//                    ->setBirthday($params['birthday'])
-//                    ->setPhone($params['phone'])
-//                    ->setRoles(["ROLE_USER"])
-//                    ->setCreationTime(new \DateTime())
-//                    ->setActivate(1)
-//                    ->setHidden(0);
-//
-//                $this->em->persist($user);
-//                $this->em->flush();
+                $user = new User();
+
+                dump($user);
+
+//                TODO: UCWORDS не работает с кириллицей. пофиксить
+                $user
+                    ->setLoginName($params['loginName'])
+                    ->setEmail($params['email'])
+                    ->setPassword($this->passwordEncoder->encodePassword($user, $params['password']))
+                    ->setSurname(ucwords(mb_strtolower($params['surname'])))
+                    ->setName(ucwords(mb_strtolower($params['name'])))
+                    ->setMiddlename(ucwords(mb_strtolower($params['middlename'])))
+                    ->setBirthday($params['birthday'])
+                    ->setPhone($params['phone'])
+                    ->setRoles(["ROLE_USER"])
+                    ->setCreationTime(new \DateTime())
+                    ->setActivate(1)
+                    ->setHidden(0);
+
+                $this->em->persist($user);
+                $this->em->flush();
 
                 $success = true;
             }
@@ -152,26 +125,107 @@ class SecurityController extends AbstractController
 
     private function validate($params)
     {
-        $result = [];
+        $result = [
+            'loginName' => '',
+            'email' => '',
+            'password' => '',
+            'repeatedPassword' => '',
+            'surname' => '',
+            'name' => '',
+            'middlename' => '',
+            'birthday' => '',
+            'phone' => ''
+        ];
+
+
         $validationLoginName = new ValidationLoginName($params['loginName']);
         if ($validationLoginName->IsValid() === false) {
             $result['loginName'] = $validationLoginName->getMessage();
+            $status = false;
         }
 
-        if ($this->uniqueValidate($params['loginName'])) {
+        if ($this->uniqueValidateLoginName($params['loginName'])) {
             $result['loginName'] = 'Пользователь с таким Ником уже существует';
+            $status = false;
         }
 
 
-        return $result;
+        $validationEmail = new ValidationEmail($params['email']);
+        if ($validationEmail->isValid() === false) {
+            $result['email'] = $validationEmail->getMessage();
+            $status = false;
+        }
+
+        if ($this->uniqueValidateEmail($params['email'])) {
+            $result['email'] = 'Пользователь с таким Email уже существует';
+            $status = false;
+        }
+
+
+        $passwords = [
+            'password' => $params['password'],
+            'repeatedPassword' => $params['repeatedPassword']
+        ];
+
+        $validationPassword = new ValidationPassword($passwords);
+        if ($validationPassword->isValid() === false) {
+            $result['password'] = $validationPassword->getMessage();
+            $status = false;
+        }
+
+
+        $validationSurname = new ValidationSurname($params['surname']);
+        if ($validationSurname->isValid() === false) {
+            $result['surname'] = $validationSurname->getMessage();
+            $status = false;
+        }
+
+
+        $validationName = new ValidationName($params['name']);
+        if ($validationName->isValid() === false) {
+            $result['name'] = $validationName->getMessage();
+            $status = false;
+        }
+
+
+        $validationBirthday = new ValidationBirthday($params['birthday']);
+        if ($validationBirthday->isValid() === false) {
+            $result['birthday'] = $validationBirthday->getMessage();
+            $status = false;
+        }
+
+
+        $validationPhone = new ValidationPhone($params['phone']);
+        if ($validationPhone->isValid() === false) {
+            $result['phone'] = $validationPhone->getMessage();
+            $status = false;
+        }
+
+
+        return [
+            'result' => $result,
+            'status' => $status ?? true
+        ];
     }
-    protected function uniqueValidate($loginName)
+    protected function uniqueValidateLoginName($loginName)
     {
+//        TODO: Проверить какого пользователя берет из БД если разный регистр.
         /** @var UserRepository $userRep */
         $userRep = $this->em->getRepository('App:User');
         /** @var User $currentUser */
         $currentUser = $userRep->findOneByLoginName($loginName);
         if ($currentUser && ($currentUser->getLoginName() === $loginName)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function uniqueValidateEmail($email)
+    {
+        $userRep = $this->em->getRepository('App:User');
+        /** @var User $currentUser */
+        $currentUser = $userRep->findOneByEmail($email);
+        if ($currentUser) {
             return true;
         }
         return false;

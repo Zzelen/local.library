@@ -84,8 +84,8 @@ class User implements UserInterface
 //     endregion
 
     /**
-     * @var integer
-     * @ORM\Column (type="integer")
+     * @var string
+     * @ORM\Column (type="string", length=255)
      */
     private $phone;
 
@@ -296,18 +296,18 @@ class User implements UserInterface
     }
 
     /**
-     * @return int
+     * @return string|null
      */
-    public function getPhone(): ?int
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
     /**
-     * @param int $phone
+     * @param string $phone
      * @return User
      */
-    public function setPhone(int $phone): User
+    public function setPhone(string $phone): User
     {
         $this->phone = $phone;
         return $this;

@@ -18,7 +18,7 @@
             <div class="form-group">
                 <label>Придумайте пароль: </label>
                 <input class="form-control" type="password" name="password">
-                <small class="form-text text-muted">Пароль может состоять из прописных и строчных латинских букв, цифр и специальных символов.</small>
+                <small class="form-text text-muted">Необходимо использовать пароль, состоящий из прописных латинских букв, строчных и цифр.</small>
             </div>
             <div class="form-group">
                 <label>Введите пароль еще раз: </label>
@@ -37,6 +37,8 @@
             <div class="form-group">
                 <label>Отчество: </label>
                 <input class="form-control" type="text" name="middlename">
+                <small class="form-text text-muted">Это поле может быть пустым.</small>
+
             </div>
             <div class="form-group">
                 <label>Дата рождения: </label>
@@ -88,7 +90,7 @@
         $saveUserButton.on('click', function () {
             let $data = $("#createUserForm").serialize();
             $.post('{{ path('app_security_register') }}', $data, function (response) {
-                if (response.errorMsg.length !== 0) {
+                if (response.success !== true) {
                     let $errorMsg = response.errorMsg;
 
                     $.each($errorMsg, function (key, value) {
@@ -98,13 +100,15 @@
                         $elem.removeClass('is-invalid');
                         $elem.parent().find($(".invalid-feedback")).remove();
 
-                        $elem.addClass('is-invalid');
-                        let parent = $elem.parent();
-                        parent.append($feedback);
+                        if (value !== '') {
+                            $elem.addClass('is-invalid');
+                            let parent = $elem.parent();
+                            parent.append($feedback);
+                        }
 
                     });
 
-                } else if (response.success === true) {
+                } else {
                     window.location.href = "{{ path('app_login') }}";
                 }
             }, 'json');

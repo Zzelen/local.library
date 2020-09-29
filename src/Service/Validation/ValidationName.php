@@ -9,6 +9,10 @@ class ValidationName extends AbstractValidation
 
     public function validate()
     {
-        // TODO: Implement validate() method.
+        if (empty($this->param)) {
+            return $this->message = 'Имя не может быть пустым';
+        }
+
+        return $this->isValid = true;
     }
 }
