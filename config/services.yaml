@@ -37,3 +37,6 @@ services:
 
     App\Controller\SecurityController:
         arguments: ['@service_container']
+
+    App\Service\UsersService:
+        arguments: ['@service_container']

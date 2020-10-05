@@ -2,31 +2,29 @@
 
 {% block title %} Авторы {% endblock %}
 
-{% block body %}
+{% block content %}
 
-    <div class="body">
-        <div class="tableContent">
-            <table class="table table-dark table-bordered">
+    <div class="column middle">
+        <table class="table table-dark table-bordered">
+            <tr>
+                <th>№</th>
+                <th>Имя Автора</th>
+                <th>Годы жизни</th>
+            </tr>
+            {% for author in authors %}
                 <tr>
-                    <th>№</th>
-                    <th>Имя Автора</th>
-                    <th>Годы жизни</th>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="{{ path('app_author_authorpage', {'id' : author.id}) }}">{{ author.surname }} {{ author.name }} {{ author.middlename }}</a>
+                    </td>
+                    <td>{{ author.birthday|date('d-m-Y') }} - {{ author.deathday|date('d-m-Y') }}</td>
                 </tr>
-                {% for author in authors %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>
-                            <a href="{{ path('app_author_authorpage', {'id' : author.id}) }}">{{ author.surname }} {{ author.name }} {{ author.middlename }}</a>
-                        </td>
-                        <td>{{ author.birthday|date('d-m-Y') }} - {{ author.deathday|date('d-m-Y') }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <div>
-                <form action="{{ path('app_author_create') }}" method="post">
-                    <input class="btn btn-primary" type="submit" name="createAuthor" value="Добавить автора">
-                </form>
-            </div>
+            {% endfor %}
+        </table>
+        <div>
+            <form action="{{ path('app_author_create') }}" method="post">
+                <input class="btn btn-primary" type="submit" name="createAuthor" value="Добавить автора">
+            </form>
         </div>
     </div>
 

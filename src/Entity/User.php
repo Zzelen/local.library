@@ -403,5 +403,22 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getFullName()
+    {
+        $fullName = "$this->surname $this->name $this->middlename";
+
+        return $fullName;
+    }
+
+    public function getRoleName()
+    {
+        $trans = [
+            'ROLE_USER' => 'Пользователь',
+            'ROLE_ADMIN' => 'Администратор',
+            'ROLE_READER' => 'Читатель'
+        ];
+        return $trans[$this->getRoles()[0]];
+    }
+
 
 }

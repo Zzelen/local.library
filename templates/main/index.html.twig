@@ -1,33 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    {% block header %}{% endblock %}
-<div>
-    <div class="general-header text-center font-weight-bold">
-        КНИГОТЕКА
-    </div>
-    <div class="content">
-        <div class="row justify-content-md-center">
-            <div class="linkPage col-4">
-                <a href="http://local.library/books">
-                    <button class="btn btn-primary btn-lg btn-block">Книги</button>
-                </a>
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="column middle">
+        <div class="general-header text-center font-weight-bold">
+            КНИГОТЕКА
+        </div>
+        <div class="content">
+            <div class="row justify-content-md-center">
+                <div class="linkPage col-4">
+                    <a href="http://local.library/books">
+                        <button class="btn btn-primary btn-lg btn-block">Книги</button>
+                    </a>
+                </div>
+
+                {# {% if app.user and 'ROLE_ADMIN' in app.user.roles %} #}
+                {% if is_granted('ROLE_USER') %}
+                    <div class="linkPage col-4">
+                        <a href="http://local.library/authors">
+                            <button class="btn btn-primary btn-lg btn-block">Авторы</button>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
 
-{#            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}#}
-            {% if is_granted('ROLE_USER') %}
-            <div class="linkPage col-4">
-                <a href="http://local.library/authors">
-                    <button class="btn btn-primary btn-lg btn-block">Авторы</button>
-                </a>
-            </div>
-            {% endif %}
+        </div>
+        <div class="footer">
+
         </div>
 
     </div>
-    <div class="footer">
-
-    </div>
-
-</div>
 {% endblock %}

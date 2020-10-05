@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}  Изменить автора — {{ author.surname }}{% endblock %}
-{% block body %}
-{#    <div>#}
-{#        {{ message }}#}
-{#    </div>#}
+{% block content %}
+    {# <div> #}
+    {# {{ message }} #}
+    {# </div> #}
 
-    <div class="body">
-        <form class="authorForm" action="" method="POST">
+    <div class="column middle">
+        <form action="" method="POST">
             <p class="form-header form-group"><b>Новый автор</b></p>
             <div class="form-group">
                 <label>Фамилия автора: </label>
@@ -48,13 +48,13 @@
                 </a>
             </div>
         </form>
-{#        <form class="formsadsa">#}
-{#            <input type="hidden" name="aaaa" value="14">#}
-{#        </form>#}
-{#        <div>#}
-{#            <button id="cancelButton" name="cancel" onclick="cancelButton()">Отменить</button>#}
-{#        </div>#}
-{#    </div>#}
+        {# <form class="formsadsa"> #}
+        {# <input type="hidden" name="aaaa" value="14"> #}
+        {# </form> #}
+        {# <div> #}
+        {# <button id="cancelButton" name="cancel" onclick="cancelButton()">Отменить</button> #}
+        {# </div> #}
+    </div>
 
 
 {% endblock %}
@@ -62,35 +62,35 @@
 {% block javascripts %}
     <script class="javascript">
 
-        {#$(document).ready(function(){#}
-        {#    // alert(jQuery.fn.jquery);#}
-        {#});#}
+        {# $(document).ready(function(){ #}
+        {# // alert(jQuery.fn.jquery); #}
+        {# }); #}
 
-        {#function cancelButton() {#}
+        {# function cancelButton() { #}
 
-        {#    let params = $('.formsadsa').serialize();#}
-        {#    $.post('{{ path('app_main_index') }}', params, function (data) {#}
+        {# let params = $('.formsadsa').serialize(); #}
+        {# $.post('{{ path('app_main_index') }}', params, function (data) { #}
 
-        {#        console.log('tuk');#}
-        {#        console.log(data);#}
-        {#    },'json').fail(function (response){#}
+        {# console.log('tuk'); #}
+        {# console.log(data); #}
+        {# },'json').fail(function (response){ #}
 
-        {#    });#}
-        {#    // let cancelButton = $("#cancelButton");#}
-        {#    // console.log(cancelButton);#}
-        {#    //#}
-        {#    // let cancelButton2 = document.querySelector('#cancelButton');#}
-        {#    // console.log(cancelButton);#}
-        {#    // cancelButton.setAttribute("disabled", "disabled");#}
-        {#    // cancelButton2.setAttribute("disabled", "disabled");#}
-        {#    //#}
-        {#    // setTimeout(1000);#}
-        {#    //#}
-        {#    // cancelButton2.setAttribute("disabled", "enabled");#}
-        {#    // // alert('HI!');#}
-        {#    // let asr = 4*324;#}
-        {#    // console.log('hello 4ert! - ' + asr);#}
-        {#}#}
+        {# }); #}
+        {# // let cancelButton = $("#cancelButton"); #}
+        {# // console.log(cancelButton); #}
+        {# // #}
+        {# // let cancelButton2 = document.querySelector('#cancelButton'); #}
+        {# // console.log(cancelButton); #}
+        {# // cancelButton.setAttribute("disabled", "disabled"); #}
+        {# // cancelButton2.setAttribute("disabled", "disabled"); #}
+        {# // #}
+        {# // setTimeout(1000); #}
+        {# // #}
+        {# // cancelButton2.setAttribute("disabled", "enabled"); #}
+        {# // // alert('HI!'); #}
+        {# // let asr = 4*324; #}
+        {# // console.log('hello 4ert! - ' + asr); #}
+        {# } #}
 
     </script>
 

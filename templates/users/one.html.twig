@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+
+    <div class="column middle">
+        <h3>Контактная информация</h3>
+
+        <div class="">
+            <div class="row">
+                <div class="col">
+                    Контактное лицо:
+                </div>
+                <div id="label-fio" class="col">
+                    {{ user.surname }} {{ user.name }} {{ user.middlename }}
+                </div>
+                <div class="col">
+                    <a href="javascript:void(0)" onclick="hiddenChanger($('#label-fio'),$('#input-fio'))">Редактировать</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="input-fio" class="d-none">
+            <div class="row">
+                <div class="form-group col">
+                    <input id="surnameValue" class="form-control" type="text" name="surname" placeholder="Фамилия"
+                           value="{{ user.surname|default('') }}">
+                </div>
+                <div class="form-group col">
+                    <input id="nameValue" class="form-control" type="text" name="name" placeholder="Имя"
+                           value="{{ user.name|default('') }}">
+                </div>
+                <div class="form-group col">
+                    <input id="middlenameValue" class="form-control" type="text" name="middlename" placeholder="Отчество"
+                           value="{{ user.middlename|default('') }}">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <input id="saveFioButton" class="" type="button" onclick="saveFio()"
+                           value="Сохранить">
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <h4>Личная информация</h4>
+            <div>
+                Дата рождения:
+            </div>
+
+            <div class="row">
+                <div id="label-birthday" class="col">
+                    {{ user.birthday |date('d-m-Y')|default('') }}
+                </div>
+                <div>
+                    <div class="col">
+                        <a href="javascript:void(0)" onclick="hiddenChanger($('#label-birthday'),$('#input-birthday'))">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="input-birthday" class="d-none">
+                <div class="row">
+                    <div class="form-group col">
+                        <input id="birthdayValue" class="form-control" type="date" name="birthday"
+                               value="{{ user.birthday |date('Y-m-d')|default('') }}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <input id="saveBirthdayButton" class="" type="button"
+                               value="Сохранить">
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script class="javascript">
+
+        function hiddenChanger(firstElement, secondElement) {
+            if (!(firstElement.hasClass("d-none"))) {
+                firstElement.addClass('d-none');
+                secondElement.removeClass('d-none')
+            } else {
+                firstElement.removeClass('d-none');
+                secondElement.addClass('d-none')
+            }
+        }
+
+        function saveFio() {
+            let surnameValue = $('#surnameValue').val();
+            let nameValue = $('#nameValue').val();
+            let middlenameValue = $('#middlenameValue').val();
+
+            $.post('{{ path('app_users_one', {'id': app.user.id}) }}', {user: {surname: surnameValue, name: nameValue, middlename: middlenameValue}}, function (response) {
+                if (response.success === false) {
+                    alert(response.message);
+                } else if (response.success === true) {
+                    window.location.href = "{{ path('app_users_one', {'id' : app.user.id}) }}";
+                }
+            }, 'json');
+
+        }
+
+
+    </script>
+
+{% endblock %}

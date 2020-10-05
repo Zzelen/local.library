@@ -2,6 +2,7 @@
 <html lang="en-RU">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}КНИГОТЕКА{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -11,53 +12,99 @@
 </head>
 <body>
 {% block header %}
-    <header class="navbar">
-{#        <div class="container">#}
-{#            <div class="row">#}
-                <div class="navbar-brand mr-0 mr-md-2">
-                    <a class="nav-link header" href="{{ path('app_book_books') }}">
+    <header class="navbar fixed-top navbar-dark bg-dark">
+        {# <div class="container"> #}
+        {# <div class="row"> #}
+        <div class="navbar-brand mr-0 mr-md-2">
+            <a class="nav-link header" href="{{ path('app_book_books') }}">
                     <span>
                         КНИГОТЕКА
                     </span>
-                    </a>
+            </a>
+        </div>
+
+        <div class="navbar-nav-scroll">
+            <ul class="nav justify-content-center">
+
+                <li class="nav-item">
+                    <a class="nav-link header" href="{{ path('app_author_authors') }}">Авторы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link header" href="{{ path('app_book_allbooks') }}">Книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link header" href="{{ path('app_main_news') }}">Новости</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link header" href="{{ path('app_main_about') }}">О Книготеке</a>
+                </li>
+            </ul>
+        </div>
+
+        {% if app.user is null %}
+            <div class="d-lg-inline-block mb-3 mb-md-0 ml-md-3">
+                <a class="header-login" href="{{ path('app_login') }}">Войти/Регистрация</a>
+            </div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="d-lg-inline-block mb-3 mb-md-0 ml-md-3 dropdown">
+                <button class="btn btn-secondary dropdown-toggle header-login" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ app.user.email }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{{ path('app_users_one', {'id': app.user.id}) }}">Личный кабинет</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="dropdown-item" href="{{ path('app_users_allusers') }}">Все пользователи</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">Выйти</a>
                 </div>
-                <div class="navbar-nav-scroll">
-                    <ul class="nav justify-content-center">
-
-                        <li class="nav-item">
-                            <a class="nav-link header" href="{{ path('app_author_authors') }}">Авторы</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link header" href="{{ path('app_book_allbooks') }}">Книги</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link header" href="{{ path('app_main_news') }}">Новости</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link header" href="{{ path('app_main_about') }}">О Книготеке</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="d-lg-inline-block mb-3 mb-md-0 ml-md-3">
-                    <a class="header-login" href="{{ path('app_login') }}">Войти/Регистрация</a>
-                </div>
+            </div>
+        {% endif %}
 
 
-{#            </div>#}
+        {# </div> #}
 
 
-{#        </div>#}
+        {# </div> #}
     </header>
-
-
-
-
-
 
 {% endblock %}
 
-{% block body %}{% endblock %}
+<div class="body-row">
+    {% block left_side %}
+        <div class="column side">
+            <h2>Side</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+        </div>
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block right_side %}
+        <div class="column side">
+            <h2>Side</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+        </div>
+    {% endblock %}
+</div>
+
+{% block footer %}
+    <!-- Footer -->
+    <footer class="footer page-footer">
+
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2020 Copyright: Zelen
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+{% endblock %}
+
+
 {# <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> #}
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
         crossorigin="anonymous"></script>

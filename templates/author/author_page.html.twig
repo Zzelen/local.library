@@ -1,32 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block title %} {{ author.surname }} {% endblock %}
-{% block body %}
 
-    <div class="body">
-    <div class="content">
-        <div class="authorPage">
-            <div class="authorHeader font-weight-bold">
+{% block content %}
+
+    <div class="column middle">
+
+        <div>
+            <div class="font-weight-bold">
                 <div class="authorName">
                     {{ author.surname }} {{ author.name }} {{ author.middlename }}
                 </div>
-                <div class="yearsOfLife">
-                    {{ author.birthday|date('d-m-Y') }} — {% if author.deathday == null %} живет {% endif %} {{ author.deathday|date('d-m-Y') }}
+                <div>
+                    {{ author.birthday|date('d-m-Y') }}
+                    — {% if author.deathday == null %} живет {% endif %} {{ author.deathday|date('d-m-Y') }}
 
                 </div>
             </div>
-            <div class="authorInfo">
-                <div class="content-title font-weight-bold">
+
+            <div>
+                <div class="font-weight-bold">
                     Информация об авторе:
                 </div>
-                <div class="content-info">
+                <div>
                     {{ author.content }}
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="books tableContent">
+        </div>
+
+
         <table class="table table-dark table-bordered">
             <tr>
                 <th>№</th>
@@ -37,25 +40,27 @@
             {% for book in author.books %}
                 <tr>
                     <td>{{ loop.index }}</td>
-                    <td><a href="{{ path('app_book_editbook', {'author': author.id, 'book': book.id }) }}">{{ book.name }}</a></td>
+                    <td>
+                        <a href="{{ path('app_book_editbook', {'author': author.id, 'book': book.id }) }}">{{ book.name }}</a>
+                    </td>
                     <td>{{ book.date }}</td>
                     <td><a href="{{ path('app_book_deletebook', {'id': book.id}) }}">Удалить</a></td>
                 </tr>
             {% endfor %}
         </table>
         <div>
-            <a href="{{ path('app_author_edit', {'id': author.id})  }}">
+            <a href="{{ path('app_author_edit', {'id': author.id}) }}">
                 <button class="btn btn-primary">Изменить</button>
             </a></div>
         <div>
-            <a href="{{ path('app_author_delete', {'id': author.id}) }}"><button>Удалить автора</button></a>
+            <a href="{{ path('app_author_delete', {'id': author.id}) }}">
+                <button>Удалить автора</button>
+            </a>
         </div>
         <div class="btn3">
-            <a href="{{ path('app_book_createbook', {'id': author.id}) }}"><button>Добавить книгу</button></a>
-
+            <a href="{{ path('app_book_createbook', {'id': author.id}) }}">
+                <button>Добавить книгу</button>
+            </a>
         </div>
-    </div>
-
-
     </div>
 {% endblock %}
