@@ -4,3 +4,6 @@
 3. Заполнить DATABASE_URL в .env
 4. Создать базу данных php bin/console doctrine:database:create
 5. Накатить миграции php bin/console do:mi:mi
+
+**Описание проекта**
+https://i.imgur.com/Elne7H3.png

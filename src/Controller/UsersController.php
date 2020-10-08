@@ -45,12 +45,11 @@ class UsersController extends AbstractController
     {
         if ($request->getMethod() === 'POST') {
             $params = $request->request->all();
-            $user = $this->usersService->getOne($params);
+            $params['id'] = $user->getId();
+            $result = $this->usersService->getOne($params);
 
-            return new JsonResponse();
+            return new JsonResponse($result);
         }
-
-
 
         return [
             'user' => $user

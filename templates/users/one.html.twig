@@ -107,7 +107,7 @@
                 if (response.success === false) {
                     alert(response.message);
                 } else if (response.success === true) {
-                    window.location.href = "{{ path('app_users_one', {'id' : app.user.id}) }}";
+                    window.location.href = "{{ path('app_users_one', {'id': app.user.id}) }}";
                 }
             }, 'json');
 
