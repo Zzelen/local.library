@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\Validation\ValidationCaptcha;
+use Gregwar\Captcha\CaptchaBuilder;
 use App\Repository\UserRepository;
 use App\Service\Validation\ValidationBirthday;
 use App\Service\Validation\ValidationEmail;
@@ -67,9 +69,7 @@ class SecurityController extends AbstractController
     public function registerAction(Request $request)
     {
         $success = false;
-
         if ($request->getMethod() === 'POST') {
-
             $params = [
                 'loginName' => trim($request->get('loginName')) ?? '',
                 'email' => trim($request->get('email')) ?? '',
@@ -79,8 +79,11 @@ class SecurityController extends AbstractController
                 'name' => trim($request->get('name')) ?? '',
                 'middlename' => trim($request->get('middlename')) ?? '',
                 'birthday' => $request->get('birthday') ?? '',
-                'phone' => trim($request->get('phone')) ?? ''
+                'phone' => trim($request->get('phone')) ?? '',
+                'captcha' => trim($request->get('captcha')) ?? ''
             ];
+
+
 
             $result = $this->validate($params);
             $errorMsg = $result['result'];
@@ -92,7 +95,6 @@ class SecurityController extends AbstractController
 
                 $user = new User();
 
-                dump($user);
 
 //                TODO: UCWORDS не работает с кириллицей. пофиксить
                 $user
@@ -120,7 +122,16 @@ class SecurityController extends AbstractController
                 'success' => $success
             ]);
         }
-        return [];
+
+//        TODO: неправильно работает session. Пофиксить.
+
+        $captchaBuilder = new CaptchaBuilder();
+        $captcha = $captchaBuilder->build();
+        $_SESSION['phrase'] = $captchaBuilder->getPhrase();
+
+        return [
+            'captcha' => $captcha->inline()
+        ];
     }
 
     private function validate($params)
@@ -134,7 +145,8 @@ class SecurityController extends AbstractController
             'name' => '',
             'middlename' => '',
             'birthday' => '',
-            'phone' => ''
+            'phone' => '',
+            'captcha' => ''
         ];
 
 
@@ -198,6 +210,12 @@ class SecurityController extends AbstractController
         $validationPhone = new ValidationPhone($params['phone']);
         if ($validationPhone->isValid() === false) {
             $result['phone'] = $validationPhone->getMessage();
+            $status = false;
+        }
+
+        $validationCaptcha = new ValidationCaptcha($params['captcha']);
+        if ($validationCaptcha->isValid() === false) {
+            $result['captcha'] = $validationCaptcha->getMessage();
             $status = false;
         }
 
